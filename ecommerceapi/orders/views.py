@@ -60,3 +60,27 @@ def createCustomerOrder(request):
             'detail': 'Internal Server Error!'
         }
         return Response(message, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+def getUserOrders(request):
+    username = request.user
+
+    # request info
+    data = request.data
+
+    # get user info details from the token
+    user = User.objects.get(username=username)
+    userSerializer = UserSerializer(user, many=False)
+    userId = userSerializer.data['id']
+
+    # get Customer Details
+    customer = CustomerProfile.objects.get(user_id=userId)
+    customerSerializer = CustomerProfileSerializer(customer, many=False)
+
+    # customer Info
+    customerId = customerSerializer.data['user_id']
+    userOrders = Orders.objects.filter(customer_id=customerId)
+
+    serializer = OrdersSerializer(userOrders, many=True)
+    return Response(serializer.data)
