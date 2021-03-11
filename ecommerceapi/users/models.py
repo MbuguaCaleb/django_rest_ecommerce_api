@@ -12,3 +12,6 @@ class CustomerProfile(models.Model):
     mobile_no = models.CharField(max_length=50)
     town = models.CharField(max_length=200, null=True, blank=True)
     is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.town
