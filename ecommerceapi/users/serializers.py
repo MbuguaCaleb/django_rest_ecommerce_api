@@ -40,3 +40,5 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerProfile
         fields = ['user_id', 'mobile_no', 'town', 'is_active']
+
+
