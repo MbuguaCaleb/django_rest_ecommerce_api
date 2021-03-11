@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .models import Orders
 from .serializers import OrdersSerializer, CustomerOrdersSerializer
 from users.serializers import UserSerializer, CustomerProfileSerializer
+from utils.sms import SMS
 from users.models import CustomerProfile
 from rest_framework import status
 from django.http import JsonResponse
@@ -21,25 +22,34 @@ def createCustomerOrder(request):
 
         # request info
         data = request.data
+        orderName = data['order_name']
 
-        # get user object from the token
+        # get user info details from the token
         user = User.objects.get(username=username)
         userSerializer = UserSerializer(user, many=False)
-
-        # get user id to query from customers
         userId = userSerializer.data['id']
+        userName = userSerializer.data['name']
 
+        # get Customer Details
         customer = CustomerProfile.objects.get(user_id=userId)
-
         customerSerializer = CustomerProfileSerializer(customer, many=False)
 
-        # getting customerId
+        # customer Info
         customerId = customerSerializer.data['user_id']
+        customerTown = customerSerializer.data['town']
+        customerMobile = customerSerializer.data['mobile_no']
 
         customerOrderInfo = Orders.objects.create(
             customer_id=customerId,
-            order_name=data['order_name']
-        )
+            order_name=orderName)
+
+        # Trigger AfricasTaking SMS
+        message = f'Dear {userName} ,You have ordered {orderName} to be delivered at {customerTown}'
+
+        sendSMS = SMS(message, customerMobile)
+
+        # sendSMS
+        sendSMS.send()
 
         customerOrder = OrdersSerializer(
             customerOrderInfo, many=False)
