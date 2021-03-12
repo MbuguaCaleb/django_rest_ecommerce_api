@@ -1,12 +1,13 @@
 from __future__ import print_function
 
 import africastalking
+from django.conf import settings
 
 
 class SMS:
     def __init__(self, message, recipients):
-        self.username = "MBUGUACALEB"
-        self.api_key = "59a9a1674cb64f9d65c380bb3ae6ccd0326eb833bcca0e43cdbefbe7a04c44c9"
+        self.username = settings.AFRICAS_TALKING_USERNAME
+        self.api_key = settings.AFRICAS_TALKING_API_KEY
         self.recipients = recipients
         self.message = message
 
@@ -17,15 +18,10 @@ class SMS:
         self.sms = africastalking.SMS
 
     def send(self):
-        # Set the numbers you want to send to in international format
         try:
-
-            # Thats it, hit send and we'll take care of the rest.
-
             recipients = []
             recipients.append(self.recipients)
             response = self.sms.send(self.message, recipients)
-            print("Hello my name is " + self.message + self.recipients)
             print(response)
         except Exception as e:
             print('Encountered an error while sending: %s' % str(e))

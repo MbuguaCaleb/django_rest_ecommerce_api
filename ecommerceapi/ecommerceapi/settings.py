@@ -10,8 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import environ
 from pathlib import Path
 from datetime import timedelta
+
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -121,10 +128,10 @@ WSGI_APPLICATION = 'ecommerceapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ecommerce',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
         'PORT': '',
     }
 }
@@ -167,3 +174,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# GETTING KEYS FROM ENV
+
+AFRICAS_TALKING_USERNAME = env('AFRICAS_TALKING_USERNAME')
+AFRICAS_TALKING_API_KEY = env('AFRICAS_TALKING_API_KEY')
