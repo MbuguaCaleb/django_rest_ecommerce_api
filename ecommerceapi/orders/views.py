@@ -11,8 +11,6 @@ from rest_framework import status
 from django.http import JsonResponse
 
 # Create an order
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createCustomerOrder(request):
@@ -32,6 +30,7 @@ def createCustomerOrder(request):
 
         # get Customer Details
         customer = CustomerProfile.objects.get(user_id=userId)
+
         customerSerializer = CustomerProfileSerializer(customer, many=False)
 
         # customer Info

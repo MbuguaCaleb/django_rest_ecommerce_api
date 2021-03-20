@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 import environ
 from pathlib import Path
 from datetime import timedelta
-
+import dj_database_url
 
 # Initialise environment variables
 env = environ.Env()
@@ -31,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'tr4h(j*!7vj*5y9ejq9@($1cq(7v3%-oa+^weur9$6t!ua4z9i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -93,6 +94,7 @@ SIMPLE_JWT = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,13 +130,16 @@ WSGI_APPLICATION = 'ecommerceapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env("DB_PASSWORD"),
-        'HOST': env("DB_HOST"),
+        'NAME': 'ecommerce',  # env('DB_NAME'),
+        'USER': 'postgres',  # env('DB_USER'),
+        'PASSWORD': 'postgres',  # env("DB_PASSWORD"),
+        'HOST': 'localhost',  # env("DB_HOST"),
         'PORT': '',
     }
 }
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -170,13 +175,21 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-STATIC_URL = '/static/'
-
-
 # GETTING KEYS FROM ENV
 
-AFRICAS_TALKING_USERNAME = env('AFRICAS_TALKING_USERNAME')
-AFRICAS_TALKING_API_KEY = env('AFRICAS_TALKING_API_KEY')
+AFRICAS_TALKING_USERNAME = 'MBUGUACALEB'  # env('AFRICAS_TALKING_USERNAME')
+# env('AFRICAS_TALKING_API_KEY')
+AFRICAS_TALKING_API_KEY = '59a9a1674cb64f9d65c380bb3ae6ccd0326eb833bcca0e43cdbefbe7a04c44c9'
+
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.1/howto/static-files/
+# Acessing my Whole Project Path
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+# enabling whitenoise settings
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
