@@ -11,14 +11,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
-import environ
 from pathlib import Path
 from datetime import timedelta
 import dj_database_url
-
-# Initialise environment variables
-env = environ.Env()
-environ.Env.read_env()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
